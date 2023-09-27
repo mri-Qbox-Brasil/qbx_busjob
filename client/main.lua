@@ -3,7 +3,7 @@ lib.locale()
 
 -- Variables
 
-local PlayerData = QBX.Functions.GetPlayerData()
+
 local route = 1
 local max = #Config.NPCLocations.Locations
 local busBlip = nil
@@ -60,10 +60,10 @@ local function removeNPCBlip()
 end
 
 local function updateBlip()
-    if table.type(PlayerData) == 'empty' or (PlayerData.job.name ~= "bus" and busBlip) then
+    if table.type(QBX.PlayerData) == 'empty' or (QBX.PlayerData.job.name ~= "bus" and busBlip) then
         removeBusBlip()
         return
-    elseif (PlayerData.job.name == "bus" and not busBlip) then
+    elseif (QBX.PlayerData.job.name == "bus" and not busBlip) then
         local coords = Config.Location
         busBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
         SetBlipSprite(busBlip, 513)
@@ -185,7 +185,7 @@ local function updateZone()
         VehicleZone = nil
     end
 
-    if table.type(PlayerData) == 'empty' or QBX.PlayerData.job.name ~= 'bus' then return end
+    if table.type(QBX.PlayerData) == 'empty' or QBX.PlayerData.job.name ~= 'bus' then return end
 
     local inRange = false
     local shownTextUI = false
@@ -296,19 +296,18 @@ AddEventHandler('onResourceStart', function(resourceName)
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerData = QBX.Functions.GetPlayerData()
     updateBlip()
     updateZone()
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
-    PlayerData = {}
+   
     updateBlip()
     updateZone()
 end)
 
 RegisterNetEvent('QBCore:Player:SetPlayerData', function(val)
-    PlayerData = val
+   
     updateBlip()
     updateZone()
 end)
